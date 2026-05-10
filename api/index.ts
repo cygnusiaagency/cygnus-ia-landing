@@ -395,7 +395,7 @@ app.post('/api/lead', async (req, res) => {
   return res.status(200).json({
     success: true,
     message: 'Lead recibido correctamente',
-    _diag: req.headers['x-diagnostic'] === 'true' ? { email: emailDiag, airtable: airtableSuccess, score } : undefined,
+    _diag: req.headers['x-diagnostic'] === 'true' ? { email: emailDiag, airtable: airtableSuccess, score, reasoning, tags } : undefined,
   });
 });
 
