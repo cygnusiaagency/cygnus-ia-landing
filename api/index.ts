@@ -244,6 +244,7 @@ app.post('/api/lead', async (req, res) => {
   // Step 4: Send Emails via Resend
   console.log('Sending emails...');
   const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+  const emailDiag: { user?: { ok: boolean; status?: number; body?: string }; owner?: { ok: boolean; status?: number; body?: string }; error?: string; hasKey: boolean } = { hasKey: !!RESEND_API_KEY };
   if (RESEND_API_KEY) {
     try {
       // Email 1: Confirmation email to the user
@@ -334,11 +335,12 @@ app.post('/api/lead', async (req, res) => {
         }),
       });
 
+      const userBody = await userEmailRes.text();
+      emailDiag.user = { ok: userEmailRes.ok, status: userEmailRes.status, body: userBody.slice(0, 500) };
       if (userEmailRes.ok) {
         console.log('Confirmation email sent to user');
       } else {
-        const err = await userEmailRes.text();
-        console.error('Error sending user email:', err);
+        console.error('Error sending user email:', userBody);
       }
 
       // Email 2: Notification email to owner (hola@cygnusia.com)
@@ -374,13 +376,15 @@ app.post('/api/lead', async (req, res) => {
         }),
       });
 
+      const ownerBody = await ownerEmailRes.text();
+      emailDiag.owner = { ok: ownerEmailRes.ok, status: ownerEmailRes.status, body: ownerBody.slice(0, 500) };
       if (ownerEmailRes.ok) {
         console.log('Notification email sent to owner');
       } else {
-        const err = await ownerEmailRes.text();
-        console.error('Error sending owner email:', err);
+        console.error('Error sending owner email:', ownerBody);
       }
     } catch (err) {
+      emailDiag.error = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
       console.error('Email sending failed:', err);
     }
   } else {
@@ -391,6 +395,7 @@ app.post('/api/lead', async (req, res) => {
   return res.status(200).json({
     success: true,
     message: 'Lead recibido correctamente',
+    _diag: req.headers['x-diagnostic'] === 'true' ? { email: emailDiag, airtable: airtableSuccess, score } : undefined,
   });
 });
 
