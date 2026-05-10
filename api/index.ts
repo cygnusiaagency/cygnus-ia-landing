@@ -1,14 +1,4 @@
 import 'dotenv/config';
-/**
- * Lead Processing API
- * 
- * This Express server handles:
- * 1. Receive lead data from the form
- * 2. Scrape the prospect's website (if provided)
- * 3. Send scraped data to Gemini for lead scoring (1-100)
- * 4. Push the scored lead to Airtable
- */
-
 import express from 'express';
 import cors from 'cors';
 
@@ -251,24 +241,86 @@ app.post('/api/lead', async (req, res) => {
   });
   console.log(`Airtable: ${airtableSuccess ? 'OK' : 'SKIPPED/FAILED'}`);
 
-  // Step 4: Send Confirmation Email via Resend
-  console.log('Sending confirmation email...');
+  // Step 4: Send Emails via Resend
+  console.log('Sending emails...');
   const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
   if (RESEND_API_KEY) {
     try {
-      const emailHtml = `
-        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-w-width: 600px; margin: 0 auto; background-color: #F4F1EA; padding: 40px; color: #0D0D12;">
-          <h2 style="color: #0D0D12; font-weight: normal; font-size: 24px; margin-bottom: 24px;">Hola ${nombre},</h2>
-          <p style="font-size: 16px; line-height: 1.6; color: #4A4A52;">Hemos recibido con éxito tu información de contacto y detalles sobre <strong>${empresa}</strong>.</p>
-          <p style="font-size: 16px; line-height: 1.6; color: #4A4A52;">Nuestro equipo está revisando tu caso en este momento. En menos de 24 horas nos pondremos en contacto contigo para agendar el diagnóstico gratuito de 15 minutos y mostrarte exactamente cuántas horas puedes recuperar al mes con IA.</p>
-          <hr style="border: 0; border-top: 1px solid rgba(13, 13, 18, 0.1); margin: 32px 0;" />
-          <p style="font-size: 14px; color: #8A8A93; margin-bottom: 8px;">Con criterio,</p>
-          <p style="font-size: 16px; font-weight: bold; color: #0D0D12; margin: 0;">El equipo de Cygnus IA</p>
-          <p style="font-size: 12px; color: #B8341E; margin-top: 4px;">Agencia de automatización B2B</p>
-        </div>
-      `;
+      // Email 1: Confirmation email to the user
+      const userEmailHtml = `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#0D0D12;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D12;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;">
 
-      const emailRes = await fetch('https://api.resend.com/emails', {
+        <!-- Header -->
+        <tr><td style="padding-bottom:40px;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-right:10px;vertical-align:middle;">
+                <!-- Constellation mark -->
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="16" cy="4"  r="2.2" fill="#F4F1EA"/>
+                  <circle cx="16" cy="16" r="2.2" fill="#F4F1EA"/>
+                  <circle cx="6"  cy="16" r="1.6" fill="#F4F1EA"/>
+                  <circle cx="26" cy="16" r="1.6" fill="#F4F1EA"/>
+                  <circle cx="12" cy="26" r="1.6" fill="#F4F1EA"/>
+                  <line x1="16" y1="6" x2="16" y2="14" stroke="#F4F1EA" stroke-width="0.8" stroke-opacity="0.4"/>
+                  <line x1="8"  y1="16" x2="14" y2="16" stroke="#F4F1EA" stroke-width="0.8" stroke-opacity="0.4"/>
+                  <line x1="18" y1="16" x2="24" y2="16" stroke="#F4F1EA" stroke-width="0.8" stroke-opacity="0.4"/>
+                  <line x1="15" y1="18" x2="13" y2="24" stroke="#F4F1EA" stroke-width="0.8" stroke-opacity="0.4"/>
+                </svg>
+              </td>
+              <td style="vertical-align:middle;">
+                <span style="font-family:Georgia,serif;color:#F4F1EA;font-size:18px;font-weight:600;letter-spacing:-0.02em;">Cygnus IA</span>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Divider -->
+        <tr><td style="border-top:1px solid rgba(244,241,234,0.1);padding-bottom:40px;"></td></tr>
+
+        <!-- Body -->
+        <tr><td>
+          <p style="font-family:Georgia,serif;color:#F4F1EA;font-size:28px;font-weight:400;line-height:1.2;margin:0 0 24px 0;letter-spacing:-0.02em;">
+            Hola ${nombre},
+          </p>
+          <p style="font-family:Arial,sans-serif;color:rgba(244,241,234,0.7);font-size:16px;line-height:1.65;margin:0 0 16px 0;">
+            Recibimos tu consulta sobre <strong style="color:#F4F1EA;">${empresa}</strong>. Nuestro equipo está revisando tu caso en este momento.
+          </p>
+          <p style="font-family:Arial,sans-serif;color:rgba(244,241,234,0.7);font-size:16px;line-height:1.65;margin:0 0 40px 0;">
+            En menos de <strong style="color:#F4F1EA;">24 horas</strong> te escribimos para agendar el diagnóstico gratuito de 15 minutos y mostrarte exactamente cuántas horas podés recuperar al mes con IA.
+          </p>
+
+          <!-- CTA button -->
+          <table cellpadding="0" cellspacing="0" style="margin-bottom:40px;">
+            <tr>
+              <td style="background-color:#B8341E;border-radius:100px;padding:14px 28px;">
+                <span style="font-family:Arial,sans-serif;color:#F4F1EA;font-size:14px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">
+                  Agendar diagnóstico gratis →
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Divider -->
+        <tr><td style="border-top:1px solid rgba(244,241,234,0.1);padding-top:32px;">
+          <p style="font-family:monospace,Courier;color:rgba(244,241,234,0.35);font-size:11px;letter-spacing:0.07em;text-transform:uppercase;margin:0 0 4px 0;">Con criterio,</p>
+          <p style="font-family:Georgia,serif;color:#F4F1EA;font-size:15px;font-weight:600;margin:0 0 2px 0;">El equipo de Cygnus IA</p>
+          <p style="font-family:monospace,Courier;color:#B8341E;font-size:11px;letter-spacing:0.07em;text-transform:uppercase;margin:0;">Agencia de automatización B2B · LATAM</p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+      const userEmailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -278,21 +330,61 @@ app.post('/api/lead', async (req, res) => {
           from: 'Cygnus IA <hola@cygnusia.com>',
           to: email,
           subject: 'Diagnóstico de Automatización Confirmado - Cygnus IA',
-          html: emailHtml,
+          html: userEmailHtml,
         }),
       });
 
-      if (!emailRes.ok) {
-        const emailErr = await emailRes.text();
-        console.error('Resend error:', emailErr);
+      if (userEmailRes.ok) {
+        console.log('Confirmation email sent to user');
       } else {
-        console.log('Email sent successfully');
+        const err = await userEmailRes.text();
+        console.error('Error sending user email:', err);
+      }
+
+      // Email 2: Notification email to owner (hola@cygnusia.com)
+      const ownerEmailHtml = `
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #F4F1EA; padding: 40px; color: #0D0D12;">
+          <h2 style="color: #0D0D12; font-weight: bold; font-size: 24px; margin-bottom: 24px;">🎯 Nuevo Lead Recibido</h2>
+          <div style="background-color: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid #B8341E;">
+            <p style="margin: 0 0 12px 0;"><strong>Nombre:</strong> ${nombre}</p>
+            <p style="margin: 0 0 12px 0;"><strong>Empresa:</strong> ${empresa}</p>
+            <p style="margin: 0 0 12px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #B8341E; text-decoration: none;">${email}</a></p>
+            ${website ? `<p style="margin: 0 0 12px 0;"><strong>Sitio Web:</strong> <a href="${website}" style="color: #B8341E; text-decoration: none;" target="_blank">${website}</a></p>` : ''}
+            <p style="margin: 0;"><strong>Score IA:</strong> <span style="font-size: 18px; font-weight: bold; color: ${score >= 70 ? '#2ecc71' : score >= 40 ? '#f39c12' : '#e74c3c'};">${score}/100</span></p>
+          </div>
+          <div style="background-color: #f9f9f9; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+            <p style="font-size: 14px; color: #666; margin: 0;"><strong>Análisis:</strong> ${reasoning}</p>
+            ${tags.length > 0 ? `<p style="font-size: 12px; color: #999; margin-top: 12px; margin-bottom: 0;"><strong>Tags:</strong> ${tags.join(', ')}</p>` : ''}
+          </div>
+          <p style="font-size: 14px; color: #666; text-align: center; margin-top: 32px;">Recibido el ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+        </div>
+      `;
+
+      const ownerEmailRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Cygnus IA <hola@cygnusia.com>',
+          to: 'hola@cygnusia.com',
+          subject: `Nuevo Lead: ${nombre} (${empresa}) - Score ${score}/100`,
+          html: ownerEmailHtml,
+        }),
+      });
+
+      if (ownerEmailRes.ok) {
+        console.log('Notification email sent to owner');
+      } else {
+        const err = await ownerEmailRes.text();
+        console.error('Error sending owner email:', err);
       }
     } catch (err) {
       console.error('Email sending failed:', err);
     }
   } else {
-    console.log('Skipped email: RESEND_API_KEY not configured');
+    console.log('Skipped emails: RESEND_API_KEY not configured');
   }
 
   // Return success regardless of Airtable status (lead is captured in logs at minimum)
@@ -308,14 +400,19 @@ app.get('/api/health', (_req, res) => {
     status: 'ok',
     gemini: !!GEMINI_API_KEY,
     airtable: !!(AIRTABLE_API_KEY && AIRTABLE_BASE_ID),
+    resend: !!process.env.RESEND_API_KEY,
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🔭 Cygnus IA Lead API running on port ${PORT}`);
-  console.log(`   Gemini: ${GEMINI_API_KEY ? '✓ configured' : '✗ missing GEMINI_API_KEY'}`);
-  console.log(`   Airtable: ${AIRTABLE_API_KEY ? '✓ configured' : '✗ missing AIRTABLE_API_KEY'}`);
-  console.log(`   Base: ${AIRTABLE_BASE_ID || '✗ missing AIRTABLE_BASE_ID'}\n`);
-});
+// Only start the server when running locally (not on Vercel serverless)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n🔭 Cygnus IA Lead API running on port ${PORT}`);
+    console.log(`   Gemini: ${GEMINI_API_KEY ? '✓' : '✗ missing GEMINI_API_KEY'}`);
+    console.log(`   Airtable: ${AIRTABLE_API_KEY ? '✓' : '✗ missing AIRTABLE_API_KEY'}`);
+    console.log(`   Resend: ${process.env.RESEND_API_KEY ? '✓' : '✗ missing RESEND_API_KEY'}`);
+    console.log(`   Base: ${AIRTABLE_BASE_ID || '✗ missing AIRTABLE_BASE_ID'}\n`);
+  });
+}
 
 export default app;
