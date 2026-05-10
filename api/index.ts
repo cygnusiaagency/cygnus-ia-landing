@@ -103,6 +103,7 @@ Tags posibles: "b2b", "b2c", "alto-presupuesto", "bajo-presupuesto", "empresa-gr
             temperature: 0.3,
             maxOutputTokens: 1024,
             responseMimeType: 'application/json',
+            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       }
