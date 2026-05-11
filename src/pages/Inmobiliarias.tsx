@@ -4,7 +4,7 @@ import { ArrowRight, Plus, Check, X } from 'lucide-react';
 import ConstellationMark from '../components/ConstellationMark';
 import CustomCursor from '../components/CustomCursor';
 import FinalCTA from '../components/FinalCTA';
-import { fadeUp, staggerContainer, viewportConfig } from '../lib/motion';
+import { fadeUp, staggerContainer } from '../lib/motion';
 
 const dolores = [
   { code: '01', title: 'Perdemos operaciones cada fin de semana', body: 'Nadie contesta a tiempo. El 78% de los clientes eligen al primer agente que responde.' },
