@@ -11,7 +11,6 @@ import Footer from './components/Footer';
 import StickyNav from './components/StickyNav';
 import CustomCursor from './components/CustomCursor';
 import Inmobiliarias from './pages/Inmobiliarias';
-import DemoInmobiliaria from './pages/DemoInmobiliaria';
 
 function HomePage() {
   return (
@@ -38,18 +37,15 @@ function App() {
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
 
-  // Listen to back/forward navigation so SPA-style links keep the page in sync
   useEffect(() => {
     const onPop = () => setPath(window.location.pathname);
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
-  // Normalize trailing slashes (treat /inmobiliarias/ same as /inmobiliarias)
   const normalized = path.replace(/\/+$/, '') || '/';
 
   if (normalized === '/inmobiliarias') return <Inmobiliarias />;
-  if (normalized === '/demo-inmobiliaria') return <DemoInmobiliaria />;
   return <HomePage />;
 }
 
