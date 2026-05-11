@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Plus, Check, X } from 'lucide-react';
 import ConstellationMark from '../components/ConstellationMark';
 import CustomCursor from '../components/CustomCursor';
+import FinalCTA from '../components/FinalCTA';
 import { fadeUp, staggerContainer, viewportConfig } from '../lib/motion';
 
 const dolores = [
@@ -72,7 +73,7 @@ export default function Inmobiliarias() {
               </motion.p>
               
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <a href="#precio" className="bg-cream text-ink px-8 py-5 rounded-[2rem] font-bold text-[16px] hover:bg-accent hover:text-cream transition-colors flex items-center gap-2 group">
+                <a href="#contacto" className="bg-cream text-ink px-8 py-5 rounded-[2rem] font-bold text-[16px] hover:bg-accent hover:text-cream transition-colors flex items-center gap-2 group">
                   Empieza gratis 14 días
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </a>
@@ -145,7 +146,7 @@ export default function Inmobiliarias() {
         </section>
 
         {/* 5. CÓMO FUNCIONA */}
-        <section className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
+        <section id="como-funciona" className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
           <div className="max-w-[1280px] mx-auto">
             <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1] tracking-[-0.02em] mb-16">
               Cómo funciona en 3 pasos.
@@ -177,14 +178,14 @@ export default function Inmobiliarias() {
             <p className="font-sans text-[clamp(1.5rem,3vw,2.5rem)] text-cream font-medium max-w-[25ch] leading-[1.2]">
               de los clientes eligen a quien responde primero.
             </p>
-            <a href="#precio" className="mt-12 bg-ink text-cream px-8 py-4 rounded-full font-bold text-[15px] hover:bg-cream hover:text-ink transition-colors uppercase tracking-wide font-mono">
+            <a href="#contacto" className="mt-12 bg-ink text-cream px-8 py-4 rounded-full font-bold text-[15px] hover:bg-cream hover:text-ink transition-colors uppercase tracking-wide font-mono">
               Empieza gratis 14 días
             </a>
           </div>
         </section>
 
         {/* 7. CASOS DE ÉXITO */}
-        <section className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
+        <section id="casos" className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
           <div className="max-w-[1280px] mx-auto">
             <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1] tracking-[-0.02em] mb-16">
               Agencias reales. <br/><span className="text-cream/40">Datos reales.</span>
@@ -210,10 +211,10 @@ export default function Inmobiliarias() {
         </section>
 
         {/* 8. QUIÉN ESTÁ DETRÁS */}
-        <section className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft bg-ink">
+        <section id="founder" className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft bg-ink">
           <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center gap-12">
             <div className="w-48 h-48 rounded-full bg-line-soft flex items-center justify-center shrink-0 border border-cream/10 overflow-hidden">
-              <span className="text-cream/30 font-mono text-sm">FOTO KEVIN</span>
+              <span className="text-cream/30 font-mono text-sm text-center px-4 uppercase tracking-widest">Kevin <br/>Enriquez</span>
             </div>
             <div className="flex-1">
               <h2 className="font-display text-[32px] text-cream mb-4">Kevin Enriquez</h2>
@@ -228,7 +229,7 @@ export default function Inmobiliarias() {
         </section>
 
         {/* 9. COMPARATIVA */}
-        <section className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
+        <section id="comparativa" className="py-24 px-5 sm:px-10 lg:px-16 border-t border-line-soft">
           <div className="max-w-[800px] mx-auto">
             <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1] tracking-[-0.02em] mb-16 text-center">
               Antes / Con Cygnusia
@@ -335,22 +336,15 @@ export default function Inmobiliarias() {
           </div>
         </section>
 
-        {/* 12. CTA FINAL */}
-        <section className="py-32 px-5 sm:px-10 lg:px-16 bg-accent text-center">
-          <div className="max-w-[1280px] mx-auto">
-            <h2 className="font-display text-[clamp(3.5rem,8vw,6.5rem)] leading-[0.9] text-cream tracking-tighter mb-10 max-w-[15ch] mx-auto">
-              Empieza gratis 14 días. Sin tarjeta. Sin riesgo.
-            </h2>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a href="#contacto" className="bg-ink text-cream px-10 py-5 rounded-[2rem] font-bold text-[18px] hover:bg-cream hover:text-ink transition-colors">
-                Empieza gratis 14 días
-              </a>
-              <a href="#contacto" className="bg-transparent text-cream border border-cream/30 px-10 py-5 rounded-[2rem] font-medium text-[18px] hover:bg-cream/10 transition-colors">
-                Reservar llamada de 20 min
-              </a>
-            </div>
-          </div>
-        </section>
+        {/* 12. FORMULARIO DE CALIFICACIÓN */}
+        <div id="contacto">
+          <FinalCTA 
+            niche="inmobiliarias" 
+            headline={<>Responde 4 preguntas y te diré <br/><em className="italic font-light text-accent">cuántas horas</em> puedes ahorrar.</>}
+            subhead="Completá el formulario y reservá tu diagnóstico de 15 minutos en el momento. Sin compromiso."
+            ctaLabel="Ver potencial de ahorro"
+          />
+        </div>
 
         {/* 13. FOOTER MINIMAL */}
         <footer className="py-12 px-5 sm:px-10 lg:px-16 bg-ink border-t border-line-soft">
@@ -360,7 +354,7 @@ export default function Inmobiliarias() {
               <span className="font-display text-[16px] text-cream">Cygnus IA</span>
             </div>
             <div className="flex gap-8 text-[14px] font-mono text-cream/50 uppercase tracking-wider">
-              <a href="https://linkedin.com/in/kevinenriquez" className="hover:text-cream transition-colors">LinkedIn</a>
+              <a href="https://linkedin.com/in/kevinenriquez" target="_blank" rel="noreferrer" className="hover:text-cream transition-colors">LinkedIn</a>
               <a href="mailto:hola@cygnusia.com" className="hover:text-cream transition-colors">Contacto</a>
               <a href="#" className="hover:text-cream transition-colors">Legal</a>
             </div>
