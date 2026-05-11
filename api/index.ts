@@ -145,14 +145,40 @@ async function pushToAirtable(record: {
   score: number;
   reasoning: string;
   tags: string[];
+  niche?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
 }): Promise<boolean> {
   if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
     console.warn('Airtable not configured, skipping push');
     return false;
   }
 
-  try {
-    const res = await fetch(
+  // Build base fields. Optional attribution fields are added only when present
+  // so that bases without these columns still accept the record.
+  const baseFields: Record<string, unknown> = {
+    Nombre: record.nombre,
+    Empresa: record.empresa,
+    Email: record.email,
+    'Sitio Web': record.website || '',
+    'Score IA': record.score,
+    'Análisis': record.reasoning,
+    Tags: record.tags.join(', '),
+    'Fecha': new Date().toISOString(),
+    Estado: record.score >= 70 ? 'Alta prioridad' : record.score >= 40 ? 'Media prioridad' : 'Baja prioridad',
+  };
+  if (record.niche) baseFields['Niche'] = record.niche;
+  if (record.utm_source) baseFields['UTM Source'] = record.utm_source;
+  if (record.utm_medium) baseFields['UTM Medium'] = record.utm_medium;
+  if (record.utm_campaign) baseFields['UTM Campaign'] = record.utm_campaign;
+  if (record.utm_term) baseFields['UTM Term'] = record.utm_term;
+  if (record.utm_content) baseFields['UTM Content'] = record.utm_content;
+
+  const tryPost = async (fields: Record<string, unknown>): Promise<Response> => {
+    return fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
       {
         method: 'POST',
@@ -160,25 +186,30 @@ async function pushToAirtable(record: {
           'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          records: [
-            {
-              fields: {
-                Nombre: record.nombre,
-                Empresa: record.empresa,
-                Email: record.email,
-                'Sitio Web': record.website || '',
-                'Score IA': record.score,
-                'Análisis': record.reasoning,
-                Tags: record.tags.join(', '),
-                'Fecha': new Date().toISOString(),
-                Estado: record.score >= 70 ? 'Alta prioridad' : record.score >= 40 ? 'Media prioridad' : 'Baja prioridad',
-              },
-            },
-          ],
-        }),
+        body: JSON.stringify({ records: [{ fields }] }),
       }
     );
+  };
+
+  try {
+    let res = await tryPost(baseFields);
+
+    // If Airtable rejects unknown columns (422 UNKNOWN_FIELD_NAME), retry without
+    // the optional attribution fields so the lead is at least saved.
+    if (res.status === 422) {
+      const errText = await res.text();
+      if (errText.includes('UNKNOWN_FIELD_NAME')) {
+        console.warn('Airtable rejected unknown columns; retrying with core fields only.');
+        const coreFields = { ...baseFields };
+        ['Niche', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'UTM Term', 'UTM Content'].forEach(
+          (k) => delete coreFields[k]
+        );
+        res = await tryPost(coreFields);
+      } else {
+        console.error('Airtable 422:', errText);
+        return false;
+      }
+    }
 
     if (!res.ok) {
       const errText = await res.text();
@@ -196,7 +227,18 @@ async function pushToAirtable(record: {
 // ─── API Route ─── //
 
 app.post('/api/lead', async (req, res) => {
-  const { nombre, empresa, email, website } = req.body;
+  const {
+    nombre,
+    empresa,
+    email,
+    website,
+    niche,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_term,
+    utm_content,
+  } = req.body;
 
   // Validation
   if (!nombre || !empresa || !email) {
@@ -210,6 +252,10 @@ app.post('/api/lead', async (req, res) => {
 
   console.log(`\n── New Lead ──`);
   console.log(`Name: ${nombre} | Company: ${empresa} | Email: ${email} | Web: ${website || 'none'}`);
+  if (niche) console.log(`Niche: ${niche}`);
+  if (utm_source || utm_medium || utm_campaign) {
+    console.log(`UTMs: source=${utm_source || '-'} medium=${utm_medium || '-'} campaign=${utm_campaign || '-'}`);
+  }
 
   // Step 1: Scrape website if provided
   let scrapedContent = '';
@@ -240,6 +286,12 @@ app.post('/api/lead', async (req, res) => {
     score,
     reasoning,
     tags,
+    niche: niche || undefined,
+    utm_source: utm_source || undefined,
+    utm_medium: utm_medium || undefined,
+    utm_campaign: utm_campaign || undefined,
+    utm_term: utm_term || undefined,
+    utm_content: utm_content || undefined,
   });
   console.log(`Airtable: ${airtableSuccess ? 'OK' : 'SKIPPED/FAILED'}`);
 
@@ -399,6 +451,100 @@ app.post('/api/lead', async (req, res) => {
     message: 'Lead recibido correctamente',
     _diag: req.headers['x-diagnostic'] === 'true' ? { email: emailDiag, airtable: airtableSuccess, score, reasoning, tags } : undefined,
   });
+});
+
+// ─── Demo Chat (SV.02 Inmobiliaria) ─── //
+
+const DEMO_INMOBILIARIA_SYSTEM = `Eres "Sol", la asistente virtual de Inmobiliaria del Sol, una inmobiliaria boutique en Buenos Aires (CABA y zona norte). Atendés consultas las 24 horas con tono cálido, profesional y conciso. Hablás en español rioplatense (vos, tenés, querés). NUNCA inventás propiedades fuera del listado oficial. Si no tenés algo, lo decís y proponés agendar visita o dejar datos para avisar cuando aparezca.
+
+LISTADO OFICIAL DE PROPIEDADES (datos sintéticos para esta demo):
+1. [VEN-001] PH 3 ambientes en Palermo Soho — 78 m² + patio 22 m². USD 215.000. Apto crédito.
+2. [VEN-002] Casa 4 ambientes en Olivos — 180 m² cubiertos, 250 m² lote, pileta, quincho. USD 480.000.
+3. [VEN-003] Departamento 2 ambientes en Belgrano R — 55 m², balcón, amenities, cochera fija. USD 165.000.
+4. [VEN-004] PH 2 ambientes en Villa Crespo — 48 m², terraza propia 18 m². USD 135.000.
+5. [VEN-005] Casa 5 ambientes en San Isidro — 220 m², jardín 400 m², parrilla. USD 620.000.
+6. [VEN-006] Departamento 1 ambiente en Recoleta — 38 m², 7° piso, vista al parque. USD 125.000.
+7. [ALQ-101] Departamento 2 ambientes en Caballito — ARS 380.000/mes, expensas ARS 75.000.
+8. [ALQ-102] PH 3 ambientes en Núñez — ARS 520.000/mes, patio, sin expensas.
+9. [ALQ-103] Studio amoblado en Palermo Hollywood — USD 850/mes (corto plazo, mín. 3 meses).
+
+REGLAS DE ATENCIÓN:
+- Respondé en máximo 4 oraciones por turno.
+- Si el cliente pregunta por una propiedad, citá el código (ej: VEN-003) y los datos clave.
+- Si pide algo que no tenés, decilo claro y ofrecé: (a) opciones cercanas del listado, (b) agendar una visita con un asesor, o (c) dejar nombre + WhatsApp para avisar cuando aparezca.
+- Si pregunta precios en moneda no listada, recordá que las ventas son en USD y los alquileres en ARS (excepto temporarios).
+- Si detectás interés serio (consulta específica + datos personales), pedí nombre, WhatsApp y horario preferido para que un asesor humano lo contacte.
+- NO des asesoramiento legal/tributario detallado: derivá a un escribano.
+- NO inventes propiedades, precios, ni metros cuadrados fuera del listado.
+
+Estás demostrando cómo Cygnus IA cualifica leads 24/7 para inmobiliarias. Sos la prueba viva del servicio.`;
+
+interface DemoChatTurn {
+  role: 'user' | 'model';
+  text: string;
+}
+
+app.post('/api/demo-chat', async (req, res) => {
+  const { message, history } = req.body as { message?: string; history?: DemoChatTurn[] };
+
+  if (!message || typeof message !== 'string' || message.trim().length === 0) {
+    return res.status(400).json({ error: 'Falta el campo "message"' });
+  }
+  if (message.length > 1000) {
+    return res.status(400).json({ error: 'Mensaje demasiado largo (máx. 1000 caracteres).' });
+  }
+  if (!GEMINI_API_KEY) {
+    return res.status(503).json({ error: 'Demo no disponible: Gemini no configurado.' });
+  }
+
+  // Cap history to last 10 turns to keep tokens predictable
+  const safeHistory: DemoChatTurn[] = Array.isArray(history)
+    ? history
+        .filter((t) => t && (t.role === 'user' || t.role === 'model') && typeof t.text === 'string')
+        .slice(-10)
+    : [];
+
+  const contents = [
+    ...safeHistory.map((t) => ({ role: t.role, parts: [{ text: t.text.slice(0, 2000) }] })),
+    { role: 'user', parts: [{ text: message }] },
+  ];
+
+  try {
+    const apiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: DEMO_INMOBILIARIA_SYSTEM }] },
+          contents,
+          generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: 512,
+            thinkingConfig: { thinkingBudget: 0 },
+          },
+        }),
+      }
+    );
+
+    if (!apiRes.ok) {
+      const errText = await apiRes.text();
+      console.error('Demo-chat Gemini error:', errText);
+      return res.status(502).json({ error: 'Error al consultar el modelo. Intentá de nuevo.' });
+    }
+
+    const data = await apiRes.json();
+    const reply: string = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+
+    if (!reply) {
+      return res.status(502).json({ error: 'El modelo no devolvió respuesta.' });
+    }
+
+    return res.status(200).json({ reply });
+  } catch (err) {
+    console.error('Demo-chat error:', err);
+    return res.status(500).json({ error: 'Error interno. Intentá de nuevo.' });
+  }
 });
 
 // Health check

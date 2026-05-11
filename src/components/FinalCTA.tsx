@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Eyebrow from './Eyebrow';
@@ -11,9 +11,37 @@ interface FormData {
   website: string;
 }
 
+interface UTMData {
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+}
+
+interface FinalCTAProps {
+  niche?: string;
+  calLink?: string;
+  headline?: React.ReactNode;
+  subhead?: string;
+  eyebrowNumber?: string;
+  eyebrowLabel?: string;
+  ctaLabel?: string;
+}
+
 type FormStep = 'form' | 'sending' | 'success' | 'error';
 
-export default function FinalCTA() {
+const DEFAULT_CAL_LINK = 'https://cal.com/cygnusia/diagnostico-15-min';
+
+export default function FinalCTA({
+  niche = 'general',
+  calLink = DEFAULT_CAL_LINK,
+  headline,
+  subhead,
+  eyebrowNumber = '07',
+  eyebrowLabel = 'Empezar',
+  ctaLabel = 'Agendar diagnóstico gratis',
+}: FinalCTAProps = {}) {
   const [form, setForm] = useState<FormData>({
     nombre: '',
     empresa: '',
@@ -22,6 +50,42 @@ export default function FinalCTA() {
   });
   const [step, setStep] = useState<FormStep>('form');
   const [errorMsg, setErrorMsg] = useState('');
+  const utmsRef = useRef<UTMData>({
+    utm_source: '',
+    utm_medium: '',
+    utm_campaign: '',
+    utm_term: '',
+    utm_content: '',
+  });
+
+  // Capture UTM params on mount (and persist in sessionStorage so they survive in-page nav)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl: UTMData = {
+      utm_source: params.get('utm_source') || '',
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_term: params.get('utm_term') || '',
+      utm_content: params.get('utm_content') || '',
+    };
+    const hasAny = Object.values(fromUrl).some(Boolean);
+    if (hasAny) {
+      utmsRef.current = fromUrl;
+      try {
+        sessionStorage.setItem('cygnus_utms', JSON.stringify(fromUrl));
+      } catch {
+        /* sessionStorage not available */
+      }
+      return;
+    }
+    try {
+      const stored = sessionStorage.getItem('cygnus_utms');
+      if (stored) utmsRef.current = JSON.parse(stored);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const handleChange = (field: keyof FormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -36,7 +100,11 @@ export default function FinalCTA() {
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          niche,
+          ...utmsRef.current,
+        }),
       });
 
       if (!res.ok) {
@@ -52,6 +120,18 @@ export default function FinalCTA() {
     }
   };
 
+  const headlineNode =
+    headline ?? (
+      <>
+        Tu primera automatización en{' '}
+        <em className="italic font-light text-accent">siete días</em>.
+      </>
+    );
+
+  const subheadText =
+    subhead ??
+    'Completá el formulario y reservá tu diagnóstico de 15 minutos en el momento. Sin compromiso.';
+
   return (
     <section
       id="cta-final"
@@ -65,21 +145,19 @@ export default function FinalCTA() {
           viewport={viewportConfig}
         >
           <motion.div variants={fadeUp} className="flex justify-center">
-            <Eyebrow number="07" label="Empezar" className="text-warm-soft" />
+            <Eyebrow number={eyebrowNumber} label={eyebrowLabel} className="text-warm-soft" />
           </motion.div>
           <motion.h2
             className="font-display text-[clamp(32px,6vw,88px)] leading-[1] font-normal tracking-[-0.035em] text-cream mb-6 sm:mb-8 font-fraunces-soft"
             variants={fadeUp}
           >
-            Tu primera automatización en{' '}
-            <em className="italic font-light text-accent">siete días</em>.
+            {headlineNode}
           </motion.h2>
           <motion.p
             className="text-[16px] sm:text-[19px] text-warm-soft max-w-[50ch] mx-auto mb-8 sm:mb-12 leading-[1.55]"
             variants={fadeUp}
           >
-            Completá el formulario y te escribimos en menos de 24 horas para
-            agendar el diagnóstico de 15 minutos. Sin compromiso.
+            {subheadText}
           </motion.p>
 
           {/* Form / States */}
@@ -91,7 +169,7 @@ export default function FinalCTA() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
-                className="py-12 sm:py-16"
+                className="py-10 sm:py-14"
               >
                 <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8341e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -99,10 +177,22 @@ export default function FinalCTA() {
                   </svg>
                 </div>
                 <h3 className="font-display text-[28px] sm:text-[36px] font-normal text-cream mb-3 font-fraunces-soft-mid">
-                  Recibido.
+                  Recibido. Reservá tu hora.
                 </h3>
-                <p className="text-[16px] text-warm-soft max-w-[40ch] mx-auto leading-[1.55]">
-                  Te escribimos en menos de 24 horas para agendar tu diagnóstico de 15 minutos.
+                <p className="text-[16px] text-warm-soft max-w-[44ch] mx-auto leading-[1.55] mb-8">
+                  Elegí el horario que mejor te quede para el diagnóstico de 15 minutos. Sin compromiso, sin tarjeta.
+                </p>
+                <a
+                  href={calLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-accent text-cream font-semibold text-[15px] hover:bg-cream hover:text-ink transition-all duration-300 group"
+                >
+                  Reservar 15 minutos ahora
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </a>
+                <p className="text-center font-mono text-[11px] tracking-[0.06em] text-warm-soft/60 pt-6">
+                  Si preferís, te escribimos a tu email en menos de 24 h.
                 </p>
               </motion.div>
             ) : (
@@ -213,7 +303,7 @@ export default function FinalCTA() {
                       </>
                     ) : (
                       <>
-                        Agendar diagnóstico gratis
+                        {ctaLabel}
                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </>
                     )}
@@ -222,7 +312,7 @@ export default function FinalCTA() {
 
                 {/* Footer note */}
                 <p className="text-center font-mono text-[11px] sm:text-[12px] tracking-[0.06em] text-warm-soft/60 pt-2">
-                  O escríbenos directamente · hola@cygnus.ia
+                  O escríbenos directamente · hola@cygnusia.com
                 </p>
               </motion.form>
             )}

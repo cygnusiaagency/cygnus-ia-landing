@@ -217,7 +217,7 @@ export default function Hero() {
 
         {/* Hero copy block — flexible growth area */}
         <motion.div
-          className="flex-1 flex items-end px-5 sm:px-10 lg:px-16 pb-8 sm:pb-12 lg:pb-16 pt-6 sm:pt-8"
+          className="px-5 sm:px-10 lg:px-16 pt-6 pb-8 sm:pt-8 sm:pb-12 lg:pb-16 sm:flex-1 sm:flex sm:items-end"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
