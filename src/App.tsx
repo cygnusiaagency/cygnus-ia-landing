@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import StickyNav from './components/StickyNav';
 import CustomCursor from './components/CustomCursor';
 import Inmobiliarias from './pages/Inmobiliarias';
+import EscabiadosChat from './pages/EscabiadosChat';
 
 function HomePage() {
   return (
@@ -46,6 +47,7 @@ function App() {
   const normalized = path.replace(/\/+$/, '') || '/';
 
   if (normalized === '/inmobiliarias') return <Inmobiliarias />;
+  if (normalized === '/escabiados') return <EscabiadosChat />;
   return <HomePage />;
 }
 

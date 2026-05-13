@@ -547,6 +547,43 @@ app.post('/api/demo-chat', async (req, res) => {
   }
 });
 
+// ─── Escabiados Chat Proxy ─── //
+
+app.post('/api/escabiados-chat', async (req, res) => {
+  const { message, sessionId } = req.body as { message?: string; sessionId?: string };
+
+  if (!message || typeof message !== 'string' || message.trim().length === 0) {
+    return res.status(400).json({ error: 'Falta el campo "message"' });
+  }
+  if (message.length > 2000) {
+    return res.status(400).json({ error: 'Mensaje demasiado largo (máx. 2000 caracteres).' });
+  }
+
+  const webhookUrl = process.env.N8N_ESCABIADOS_WEBHOOK;
+  if (!webhookUrl) {
+    return res.status(503).json({ error: 'Chat no disponible en este momento.' });
+  }
+
+  try {
+    const n8nRes = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: message.trim(), sessionId: sessionId || 'anonymous' }),
+    });
+
+    if (!n8nRes.ok) {
+      console.error('n8n webhook error:', n8nRes.status, await n8nRes.text());
+      return res.status(502).json({ error: 'Error al procesar tu mensaje. Intentá de nuevo.' });
+    }
+
+    const data = await n8nRes.json();
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error('Escabiados chat error:', err);
+    return res.status(500).json({ error: 'Error de conexión. Intentá de nuevo.' });
+  }
+});
+
 // Health check
 app.get('/api/health', (_req, res) => {
   res.json({
