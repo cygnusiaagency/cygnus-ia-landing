@@ -172,7 +172,7 @@ export default function FinalCTA({
                 className="py-10 sm:py-14"
               >
                 <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8341e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D34B32" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>

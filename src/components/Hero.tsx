@@ -91,7 +91,7 @@ function CanvasFallback() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 120) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(184, 52, 30, ${0.15 * (1 - dist / 120)})`;
+            ctx.strokeStyle = `rgba(211, 75, 50, ${0.15 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -104,7 +104,7 @@ function CanvasFallback() {
       for (const p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(244, 241, 234, ${p.opacity})`;
+        ctx.fillStyle = `rgba(250, 250, 250, ${p.opacity})`;
         ctx.fill();
       }
 
@@ -238,9 +238,9 @@ export default function Hero() {
               className="font-display text-cream text-[clamp(2rem,7vw,6.5rem)] leading-[0.94] tracking-[-0.035em] font-normal mb-5 sm:mb-8 max-w-[18ch] font-fraunces-soft"
               variants={fadeUp}
             >
-              El proceso que te quita cuatro horas al día no es trabajo. Es{' '}
+              Automatización con IA para{' '}
               <em className="italic font-light text-accent font-fraunces-soft-high">
-                deuda
+                Clínicas Estéticas y Medspas
               </em>
               .
             </motion.h1>
@@ -250,10 +250,10 @@ export default function Hero() {
               className="text-[15px] sm:text-[clamp(1rem,1.4vw,1.25rem)] leading-[1.5] text-cream/70 max-w-[58ch] font-normal mb-6 sm:mb-10"
               variants={fadeUp}
             >
-              Implementamos sistemas de IA que recuperan el tiempo que tu equipo
-              está perdiendo en tareas manuales repetitivas. Diagnosticamos,
-              construimos y mantenemos. Si no ahorra horas medibles, no
-              facturamos.
+              Recuperá hasta 80 horas al mes en recepción. Un asistente de IA
+              que responde, cualifica y agenda a tus pacientes en Google
+              Calendar en menos de 60 segundos. Si no te ahorra horas medibles
+              en 14 días, no pagas el setup.
             </motion.p>
 
             {/* CTA row */}
@@ -283,7 +283,7 @@ export default function Hero() {
           <div className="grid grid-cols-3 gap-3 sm:gap-8 pt-5 max-w-[1280px] mx-auto">
             {[
               { label: 'Activos atendiendo', value: '11 procesos' },
-              { label: 'Implementación media', value: '5 días' },
+              { label: 'Implementación en', value: '5 días' },
               { label: 'Garantía', value: '14 días sin tarjeta' },
             ].map((stat) => (
               <div key={stat.label}>

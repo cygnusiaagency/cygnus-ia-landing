@@ -4,7 +4,7 @@ interface Props {
 }
 
 export default function ConstellationMark({ size = 28, variant = 'ink' }: Props) {
-  const fill = variant === 'ink' ? '#0d0d0d' : '#f4f1ea';
+  const fill = variant === 'ink' ? '#111111' : '#FAFAFA';
   const stroke = fill;
 
   return (
@@ -19,7 +19,7 @@ export default function ConstellationMark({ size = 28, variant = 'ink' }: Props)
       <circle cx="6" cy="22" r="2" fill={fill} />
       <circle cx="14" cy="14" r="2.2" fill={fill} />
       {/* Fourth star (top-right) is always accent red */}
-      <circle cx="22" cy="6" r="2" fill="#b8341e" />
+      <circle cx="22" cy="6" r="2" fill="#D34B32" />
       <circle cx="22" cy="20" r="1.5" fill={fill} />
       <circle cx="6" cy="8" r="1.5" fill={fill} />
       <line x1="6" y1="22" x2="14" y2="14" stroke={stroke} strokeWidth="0.6" />

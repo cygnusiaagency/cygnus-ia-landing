@@ -89,8 +89,8 @@ export default function CustomCursor() {
             width: isHovering ? 48 : 32,
             height: isHovering ? 48 : 32,
             background: isHovering
-              ? 'radial-gradient(circle, rgba(184, 52, 30, 0.25) 0%, transparent 70%)'
-              : 'radial-gradient(circle, rgba(184, 52, 30, 0.12) 0%, transparent 70%)',
+              ? 'radial-gradient(circle, rgba(211, 75, 50, 0.25) 0%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(211, 75, 50, 0.12) 0%, transparent 70%)',
             filter: 'blur(2px)',
             transform: 'translate(-50%, -50%)',
           }}
@@ -111,10 +111,10 @@ export default function CustomCursor() {
           style={{
             width: isHovering ? 8 : 5,
             height: isHovering ? 8 : 5,
-            backgroundColor: isHovering ? '#b8341e' : '#f4f1ea',
+            backgroundColor: isHovering ? '#D34B32' : '#FAFAFA',
             boxShadow: isHovering
-              ? '0 0 12px rgba(184, 52, 30, 0.6), 0 0 4px rgba(184, 52, 30, 0.8)'
-              : '0 0 8px rgba(244, 241, 234, 0.3), 0 0 2px rgba(244, 241, 234, 0.5)',
+              ? '0 0 12px rgba(211, 75, 50, 0.6), 0 0 4px rgba(211, 75, 50, 0.8)'
+              : '0 0 8px rgba(250, 250, 250, 0.3), 0 0 2px rgba(250, 250, 250, 0.5)',
             transform: 'translate(-50%, -50%)',
           }}
         />

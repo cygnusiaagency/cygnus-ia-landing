@@ -7,22 +7,12 @@ export interface Problem {
 export const problems: Problem[] = [
   {
     code: 'P / 01',
-    title: 'Leads que se enfrían antes de que alguien los conteste.',
-    body: 'El primero que responde gana el cliente. Si tardas más de 5 minutos, ya empezaste perdiendo.',
+    title: 'Leads que se enfrían en DMs',
+    body: 'Pacientes en visto mientras estás inyectando. El 78% no reserva online, mandan un DM. Si tardás más de 5 minutos, se van con la competencia.',
   },
   {
     code: 'P / 02',
-    title: 'Tareas repetitivas comiéndose a tu mejor gente.',
-    body: 'Copiar datos entre dos pestañas, generar reportes manuales, contestar lo mismo cien veces. No los contrataste para eso.',
-  },
-  {
-    code: 'P / 03',
-    title: 'Documentación dispersa que nadie consulta.',
-    body: 'Manuales, políticas, procedimientos repartidos entre PDFs, Drive y Notion. Nadie los lee. Todos vuelven a preguntar lo mismo.',
-  },
-  {
-    code: 'P / 04',
-    title: 'Una web que parece de hace diez años.',
-    body: 'Si tu sitio no genera confianza en el primer scroll, el visitante se va. Y nunca sabes a cuántos perdiste.',
+    title: 'El dolor de las cancelaciones',
+    body: 'El 22.25% de las citas terminan en cancelación. Perder un turno de alto valor te cuesta miles de dólares al mes.',
   },
 ];
