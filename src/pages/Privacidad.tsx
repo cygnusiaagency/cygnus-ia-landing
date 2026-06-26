@@ -1,6 +1,6 @@
 import ConstellationMark from '../components/ConstellationMark';
 
-const CONTACT_EMAIL = 'agency.cygnusai@gmail.com';
+const CONTACT_EMAIL = 'hola@cygnusia.com';
 const LAST_UPDATED = '25 de junio de 2026';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
