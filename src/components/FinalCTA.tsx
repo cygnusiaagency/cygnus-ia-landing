@@ -33,14 +33,19 @@ type FormStep = 'form' | 'sending' | 'success' | 'error';
 
 const DEFAULT_CAL_LINK = 'https://cal.com/cygnusia/diagnostico-15-min';
 
+const inputClass =
+  'w-full px-5 py-3.5 sm:py-4 bg-cream-deep border border-line rounded-2xl text-ink text-[15px] placeholder:text-warm-soft focus:outline-none focus:border-accent transition-colors duration-200';
+const labelClass =
+  'block font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-warm mb-2';
+
 export default function FinalCTA({
-  niche = 'general',
+  niche = 'clinicas-esteticas',
   calLink = DEFAULT_CAL_LINK,
   headline,
   subhead,
   eyebrowNumber = '07',
   eyebrowLabel = 'Empezar',
-  ctaLabel = 'Agendar diagnóstico gratis',
+  ctaLabel = 'Probar 14 días gratis',
 }: FinalCTAProps = {}) {
   const [form, setForm] = useState<FormData>({
     nombre: '',
@@ -123,19 +128,18 @@ export default function FinalCTA({
   const headlineNode =
     headline ?? (
       <>
-        Tu primera automatización en{' '}
-        <em className="italic font-light text-accent">siete días</em>.
+        Probá tu recepcionista de IA <span className="text-accent">14 días gratis</span>.
       </>
     );
 
   const subheadText =
     subhead ??
-    'Completá el formulario y reservá tu diagnóstico de 15 minutos en el momento. Sin compromiso.';
+    'Dejanos tus datos y reservá tu diagnóstico de 15 minutos. Sin tarjeta, sin compromiso. Si no te ahorra horas, no pagás el setup.';
 
   return (
     <section
       id="cta-final"
-      className="bg-ink text-cream w-full py-20 sm:py-28 lg:py-[160px] px-5 sm:px-10 text-center"
+      className="bg-cream w-full py-16 sm:py-28 lg:py-[140px] px-5 sm:px-10 text-center border-t border-line-soft"
     >
       <div className="max-w-[640px] mx-auto">
         <motion.div
@@ -145,16 +149,16 @@ export default function FinalCTA({
           viewport={viewportConfig}
         >
           <motion.div variants={fadeUp} className="flex justify-center">
-            <Eyebrow number={eyebrowNumber} label={eyebrowLabel} className="text-warm-soft" />
+            <Eyebrow number={eyebrowNumber} label={eyebrowLabel} />
           </motion.div>
           <motion.h2
-            className="font-display text-[clamp(32px,6vw,88px)] leading-[1] font-normal tracking-[-0.035em] text-cream mb-6 sm:mb-8 font-fraunces-soft"
+            className="text-[clamp(30px,5vw,60px)] leading-[1.04] font-bold tracking-tightest text-ink mb-6 text-balance"
             variants={fadeUp}
           >
             {headlineNode}
           </motion.h2>
           <motion.p
-            className="text-[16px] sm:text-[19px] text-warm-soft max-w-[50ch] mx-auto mb-8 sm:mb-12 leading-[1.55]"
+            className="text-[16px] sm:text-[18px] text-warm max-w-[50ch] mx-auto mb-10 sm:mb-12 leading-[1.6]"
             variants={fadeUp}
           >
             {subheadText}
@@ -171,27 +175,27 @@ export default function FinalCTA({
                 transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
                 className="py-10 sm:py-14"
               >
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D34B32" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <h3 className="font-display text-[28px] sm:text-[36px] font-normal text-cream mb-3 font-fraunces-soft-mid">
+                <h3 className="text-[26px] sm:text-[32px] font-bold tracking-tightest text-ink mb-3">
                   Recibido. Reservá tu hora.
                 </h3>
-                <p className="text-[16px] text-warm-soft max-w-[44ch] mx-auto leading-[1.55] mb-8">
+                <p className="text-[16px] text-warm max-w-[44ch] mx-auto leading-[1.6] mb-8">
                   Elegí el horario que mejor te quede para el diagnóstico de 15 minutos. Sin compromiso, sin tarjeta.
                 </p>
                 <a
                   href={calLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-accent text-cream font-semibold text-[15px] hover:bg-cream hover:text-ink transition-all duration-300 group"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 px-7 py-4 min-h-[52px] rounded-full bg-accent text-cream-deep font-semibold text-[15px] hover:bg-accent-deep transition-colors duration-200 group"
                 >
                   Reservar 15 minutos ahora
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </a>
-                <p className="text-center font-mono text-[11px] tracking-[0.06em] text-warm-soft/60 pt-6">
+                <p className="text-center font-mono text-[11px] tracking-[0.06em] text-warm-soft pt-6">
                   Si preferís, te escribimos a tu email en menos de 24 h.
                 </p>
               </motion.div>
@@ -205,12 +209,8 @@ export default function FinalCTA({
                 className="space-y-3 sm:space-y-4 text-left max-w-[500px] mx-auto"
                 onSubmit={handleSubmit}
               >
-                {/* Nombre */}
                 <div>
-                  <label
-                    htmlFor="lead-nombre"
-                    className="block font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-cream/40 mb-2"
-                  >
+                  <label htmlFor="lead-nombre" className={labelClass}>
                     Nombre *
                   </label>
                   <input
@@ -220,35 +220,27 @@ export default function FinalCTA({
                     onChange={(e) => handleChange('nombre', e.target.value)}
                     placeholder="Tu nombre"
                     required
-                    className="w-full px-5 py-3.5 sm:py-4 bg-cream/[0.05] border border-cream/[0.15] rounded-2xl text-cream font-sans text-[15px] placeholder:text-warm-soft/50 focus:outline-none focus:border-accent/60 transition-colors duration-200"
+                    className={inputClass}
                   />
                 </div>
 
-                {/* Empresa */}
                 <div>
-                  <label
-                    htmlFor="lead-empresa"
-                    className="block font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-cream/40 mb-2"
-                  >
-                    Empresa / Negocio *
+                  <label htmlFor="lead-empresa" className={labelClass}>
+                    Clínica / Medspa *
                   </label>
                   <input
                     id="lead-empresa"
                     type="text"
                     value={form.empresa}
                     onChange={(e) => handleChange('empresa', e.target.value)}
-                    placeholder="Nombre de tu empresa"
+                    placeholder="Nombre de tu clínica"
                     required
-                    className="w-full px-5 py-3.5 sm:py-4 bg-cream/[0.05] border border-cream/[0.15] rounded-2xl text-cream font-sans text-[15px] placeholder:text-warm-soft/50 focus:outline-none focus:border-accent/60 transition-colors duration-200"
+                    className={inputClass}
                   />
                 </div>
 
-                {/* Email */}
                 <div>
-                  <label
-                    htmlFor="lead-email"
-                    className="block font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-cream/40 mb-2"
-                  >
+                  <label htmlFor="lead-email" className={labelClass}>
                     Correo electrónico *
                   </label>
                   <input
@@ -256,43 +248,37 @@ export default function FinalCTA({
                     type="email"
                     value={form.email}
                     onChange={(e) => handleChange('email', e.target.value)}
-                    placeholder="tu@empresa.com"
+                    placeholder="tu@clinica.com"
                     required
-                    className="w-full px-5 py-3.5 sm:py-4 bg-cream/[0.05] border border-cream/[0.15] rounded-2xl text-cream font-sans text-[15px] placeholder:text-warm-soft/50 focus:outline-none focus:border-accent/60 transition-colors duration-200"
+                    className={inputClass}
                   />
                 </div>
 
-                {/* Website (optional) */}
                 <div>
-                  <label
-                    htmlFor="lead-website"
-                    className="block font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-cream/40 mb-2"
-                  >
-                    Sitio web <span className="text-cream/20">· opcional</span>
+                  <label htmlFor="lead-website" className={labelClass}>
+                    Instagram o sitio web <span className="text-warm-soft">· opcional</span>
                   </label>
                   <input
                     id="lead-website"
-                    type="url"
+                    type="text"
                     value={form.website}
                     onChange={(e) => handleChange('website', e.target.value)}
-                    placeholder="https://tuempresa.com"
-                    className="w-full px-5 py-3.5 sm:py-4 bg-cream/[0.05] border border-cream/[0.15] rounded-2xl text-cream font-sans text-[15px] placeholder:text-warm-soft/50 focus:outline-none focus:border-accent/60 transition-colors duration-200"
+                    placeholder="@tuclinica o https://tuclinica.com"
+                    className={inputClass}
                   />
                 </div>
 
-                {/* Error message */}
                 {step === 'error' && errorMsg && (
                   <p className="text-accent text-[13px] font-medium text-center pt-1">
                     {errorMsg}
                   </p>
                 )}
 
-                {/* Submit */}
                 <div className="pt-2 sm:pt-3">
                   <button
                     type="submit"
                     disabled={step === 'sending'}
-                    className="w-full inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-accent text-cream font-semibold text-[15px] hover:bg-cream hover:text-ink transition-all duration-300 group disabled:opacity-60 disabled:hover:bg-accent disabled:hover:text-cream"
+                    className="w-full inline-flex items-center justify-center gap-2.5 px-7 py-4 min-h-[52px] rounded-full bg-accent text-cream-deep font-semibold text-[15px] hover:bg-accent-deep transition-colors duration-200 group disabled:opacity-60 disabled:hover:bg-accent"
                   >
                     {step === 'sending' ? (
                       <>
@@ -310,9 +296,8 @@ export default function FinalCTA({
                   </button>
                 </div>
 
-                {/* Footer note */}
-                <p className="text-center font-mono text-[11px] sm:text-[12px] tracking-[0.06em] text-warm-soft/60 pt-2">
-                  O escríbenos directamente · hola@cygnusia.com
+                <p className="text-center font-mono text-[11px] sm:text-[12px] tracking-[0.06em] text-warm-soft pt-2">
+                  O escribinos directamente · hola@cygnusia.com
                 </p>
               </motion.form>
             )}

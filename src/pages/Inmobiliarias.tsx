@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Plus, Check, X } from 'lucide-react';
 import ConstellationMark from '../components/ConstellationMark';
-import CustomCursor from '../components/CustomCursor';
 import FinalCTA from '../components/FinalCTA';
 import { fadeUp, staggerContainer } from '../lib/motion';
 
@@ -41,8 +40,6 @@ export default function Inmobiliarias() {
 
   return (
     <>
-      <CustomCursor />
-      
       <div className="bg-ink min-h-screen text-cream font-sans selection:bg-accent selection:text-cream">
         
         {/* Grain Overlay global */}

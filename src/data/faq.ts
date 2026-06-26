@@ -7,31 +7,31 @@ export const faq: FAQItem[] = [
   {
     question: '¿Qué pasa si los 14 días no me convencen?',
     answer:
-      'Te vas sin facturar nada. Literalmente. No hay letra pequeña, no hay datos de tarjeta, no hay permanencia. Si el sistema no te ahorró horas que tú mismo puedas medir y verificar, no es nuestro cliente y no nos interesa cobrarte. Esa es la garantía completa.',
+      'Te vas sin pagar el setup. Literalmente. No pedimos datos de tarjeta para empezar y no hay permanencia. Si el asistente no te ahorró horas que puedas medir vos mismo, no facturamos. Esa es la garantía completa.',
   },
   {
-    question: '¿Qué tan técnico tengo que ser yo o mi equipo?',
+    question: '¿El asistente responde como mi clínica o suena a robot?',
     answer:
-      'Cero. Tú nos cuentas el proceso, nosotros lo implementamos en tu entorno y te damos un panel de control en lenguaje humano. Si tu equipo sabe usar Excel y WhatsApp, sabe usar lo que entregamos. La complejidad técnica es nuestro trabajo, no el tuyo.',
+      'Lo entrenamos con tus tratamientos, tus precios y tu tono antes de ponerlo a hablar. Responde como una recepcionista que conoce tu clínica, no como un bot genérico. Y siempre podés tomar la conversación vos cuando quieras.',
   },
   {
-    question: '¿Cuánto tarda en estar funcionando de verdad?',
+    question: '¿Se conecta con mi WhatsApp, Instagram y mi agenda?',
     answer:
-      'Entre 3 y 7 días desde la llamada de diagnóstico hasta el sistema corriendo en producción con tus datos. Procesos más complejos pueden llevar dos semanas, pero te lo decimos antes de empezar. Nunca te dejamos esperando un mes sin entregables visibles.',
+      'Sí. Atiende los DMs de WhatsApp e Instagram y agenda directamente en tu Google Calendar. Si usás otra agenda, lo vemos en el diagnóstico. Tu equipo sigue trabajando con las mismas herramientas de siempre.',
   },
   {
-    question: '¿Mis datos están seguros?',
+    question: '¿Cuánto tarda en estar funcionando?',
     answer:
-      'Trabajamos sobre tus propios entornos siempre que es posible (tu base de datos, tu Drive, tu CRM). Cuando usamos servicios de IA externos, lo hacemos con configuraciones que no entrenan modelos con tus datos. Te firmamos NDA antes de la primera reunión técnica si lo necesitas.',
+      'Cinco días desde la llamada de diagnóstico hasta el asistente atendiendo pacientes reales. No te dejamos esperando semanas: en cinco días ya está cualificando y agendando.',
   },
   {
-    question: '¿Qué procesos puedo automatizar?',
+    question: '¿Va a reemplazar a mi recepción?',
     answer:
-      'Regla simple: si tu equipo lo hace de forma repetitiva, con criterios identificables y con datos digitales, probablemente se puede automatizar. Atención de leads, generación de reportes, entrada de datos, conciliaciones, respuestas frecuentes, búsqueda en documentación. En la llamada de 15 minutos te decimos qué se puede y qué no, sin venderte humo.',
+      'No. Se queda con lo repetitivo —responder DMs, cualificar y agendar— para que tu recepción dedique su tiempo a los pacientes que ya están en la clínica. Es una herramienta, no un reemplazo.',
   },
   {
-    question: '¿Por qué Cygnus IA y no otra agencia?',
+    question: '¿Mis datos y los de mis pacientes están seguros?',
     answer:
-      'Porque no vendemos talleres, consultorías ni "transformación digital". Vendemos sistemas que se miden en horas ahorradas. La factura llega cuando hay resultado verificable, no antes. Si esa lógica te parece justa, somos los que estás buscando.',
+      'Trabajamos sobre tus propias cuentas (tu WhatsApp, tu Instagram, tu Google Calendar) y usamos los servicios de IA con configuraciones que no entrenan modelos con tus datos. Firmamos NDA antes de la primera reunión técnica si lo necesitás.',
   },
 ];

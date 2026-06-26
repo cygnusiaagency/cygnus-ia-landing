@@ -5,16 +5,11 @@ import { fadeUp, staggerContainer, viewportConfig } from '../lib/motion';
 
 export default function ProblemGrid() {
   return (
-    <>
-      {/* Divider */}
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-10">
-        <hr className="border-0 h-px bg-line-soft" />
-      </div>
-
-      <section
-        id="problema"
-        className="py-20 sm:py-[120px] px-5 sm:px-10 max-w-[1280px] mx-auto"
-      >
+    <section
+      id="problema"
+      className="bg-cream py-16 sm:py-[120px] px-5 sm:px-10 border-t border-line-soft"
+    >
+      <div className="max-w-[1280px] mx-auto">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -25,40 +20,41 @@ export default function ProblemGrid() {
             <Eyebrow number="01" label="El problema" />
           </motion.div>
           <motion.h2
-            className="font-display text-[clamp(36px,5.5vw,80px)] leading-[1] font-normal tracking-[-0.025em] text-ink max-w-[22ch] mb-16 sm:mb-20 font-fraunces-soft"
+            className="text-[clamp(30px,4.4vw,56px)] leading-[1.05] font-bold tracking-tightest text-ink max-w-[20ch] mb-14 sm:mb-20 text-balance"
             variants={fadeUp}
           >
-            Reconoces alguno <em className="italic font-light text-warm">de estos</em>?
+            Tu clínica no pierde pacientes por precio. Los pierde por tiempo.
           </motion.h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-l border-line">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {problems.map((problem, i) => (
             <motion.div
               key={problem.code}
-              className="p-8 sm:p-12 border-r border-b border-line hover:bg-ink/[0.02] transition-colors duration-300"
+              className="rounded-3xl border border-line bg-cream-deep p-8 sm:p-10"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportConfig}
-              transition={{
-                duration: 0.9,
-                ease: [0.2, 0.8, 0.2, 1],
-                delay: i * 0.1,
-              }}
+              transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1], delay: i * 0.1 }}
             >
-              <div className="font-mono text-[12px] tracking-[0.08em] text-warm mb-6">
-                {problem.code}
+              <div className="flex items-baseline gap-4 mb-8">
+                <span className="text-[clamp(44px,6vw,68px)] font-extrabold tracking-tightest text-accent nums leading-none">
+                  {problem.stat}
+                </span>
+                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-warm-soft">
+                  {problem.code}
+                </span>
               </div>
-              <h3 className="font-display text-[28px] leading-[1.15] font-medium tracking-[-0.02em] text-ink mb-4 font-fraunces-soft-mid">
+              <h3 className="text-[22px] sm:text-[26px] font-semibold tracking-[-0.02em] text-ink mb-4">
                 {problem.title}
               </h3>
-              <p className="text-[16px] leading-[1.55] text-ink-soft max-w-[38ch]">
+              <p className="text-[15.5px] leading-[1.6] text-warm max-w-[42ch]">
                 {problem.body}
               </p>
             </motion.div>
           ))}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

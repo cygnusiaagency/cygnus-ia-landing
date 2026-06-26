@@ -1,53 +1,32 @@
-export interface Service {
+export interface Capability {
   code: string;
-  titleParts: { before: string; emphasis: string; after: string };
+  title: string;
   description: string;
-  tags: string[];
+  metric: string;
 }
 
-export const services: Service[] = [
+// El producto es uno solo: un asistente de IA para WhatsApp e Instagram.
+// Estas son las tres tareas que hace, sin intervención humana.
+export const services: Capability[] = [
   {
-    code: 'SV.01',
-    titleParts: {
-      before: 'Asistente IA con tu ',
-      emphasis: 'documentación oficial',
-      after: '',
-    },
+    code: '01',
+    title: 'Responde en menos de 60 segundos',
     description:
-      'Convertimos tus PDFs, manuales internos, políticas y bases de conocimiento en un asistente que responde citando capítulo y página exacta. Cero alucinaciones, cien por cien auditable. Para empresas donde una respuesta inventada es responsabilidad jurídica.',
-    tags: ['Despachos', 'Industria', 'Formación', 'Atención cliente N1'],
+      'Cada DM de WhatsApp e Instagram recibe respuesta al instante, 24/7. Tono de tu clínica, sin esperas, sin pacientes en visto. El primero que contesta es el que se queda con la cita.',
+    metric: '< 60 s de respuesta',
   },
   {
-    code: 'SV.02',
-    titleParts: {
-      before: 'Cualificación automática ',
-      emphasis: 'de leads',
-      after: '',
-    },
+    code: '02',
+    title: 'Cualifica a cada paciente',
     description:
-      'Tus leads de WhatsApp, formulario web o Instagram reciben respuesta en menos de 60 segundos, 24 horas al día. Llegan a tu equipo ya cualificados, con la información que necesitan para cerrar. El resto, descartados sin perder un minuto.',
-    tags: ['Inmobiliarias', 'Servicios profesionales', 'Educación', 'E-commerce'],
+      'Pregunta por el tratamiento de interés, la zona, la urgencia y el presupuesto antes de ocupar la agenda. Tu equipo solo habla con pacientes reales, no con curiosos.',
+    metric: 'Solo pacientes reales',
   },
   {
-    code: 'SV.03',
-    titleParts: {
-      before: 'Automatización de ',
-      emphasis: 'back-office',
-      after: '',
-    },
+    code: '03',
+    title: 'Agenda en Google Calendar',
     description:
-      'Tickets, facturas, conciliaciones, reportes, traspaso de datos entre sistemas. Lo que tu equipo hace cada día, nadie quiere hacer, y consume las horas más caras del mes. Lo construimos en n8n o código a medida según el caso.',
-    tags: ['Administración', 'Logística', 'Contabilidad', 'Operaciones'],
-  },
-  {
-    code: 'SV.04',
-    titleParts: {
-      before: 'Páginas web ',
-      emphasis: 'que convierten',
-      after: '',
-    },
-    description:
-      'Sitios diseñados con criterio editorial y construidos con foco en conversión. Performance real, copy que vende sin sonar a vendedor, integración con tus sistemas. Esto que estás leyendo es exactamente lo que entregamos.',
-    tags: ['Landing pages', 'Sitios corporativos', 'Embudos de captación', 'Rediseños'],
+      'Reserva el turno directamente en el calendario de tu clínica, confirma por mensaje y envía recordatorios para frenar las cancelaciones. Sin planillas, sin idas y vueltas.',
+    metric: 'Menos no-shows',
   },
 ];

@@ -8,26 +8,26 @@ export interface Step {
 export const steps: Step[] = [
   {
     num: 1,
-    duration: '15 min · gratis',
+    duration: 'Día 0 · 15 min gratis',
     title: 'Diagnóstico',
-    body: 'Entendemos tu proceso, calculamos el coste real y proponemos qué automatizar primero.',
+    body: 'Revisamos tus DMs, tu agenda y tu flujo de turnos. Te decimos exactamente cuántas horas y cuántos turnos estás perdiendo hoy.',
   },
   {
     num: 2,
-    duration: '3 a 7 días',
+    duration: 'Días 1 a 5',
     title: 'Implementación',
-    body: 'Construimos el sistema, lo conectamos a tus herramientas y formamos a tu equipo.',
+    body: 'Entrenamos al asistente con tus tratamientos y precios, lo conectamos a WhatsApp, Instagram y Google Calendar, y lo dejamos hablando como tu clínica.',
   },
   {
     num: 3,
-    duration: '14 días · gratis',
+    duration: 'Días 5 a 19 · gratis',
     title: 'Prueba real',
-    body: 'El sistema corre en tu entorno con tus datos. Medimos las horas ahorradas día a día.',
+    body: 'El asistente atiende a tus pacientes reales durante 14 días. Medimos horas ahorradas y turnos agendados, día a día.',
   },
   {
     num: 4,
-    duration: 'si funciona',
+    duration: 'Si te ahorra horas',
     title: 'Setup + mensualidad',
-    body: 'Pagas el setup y una mensualidad de mantenimiento. Si no ahorró tiempo medible, te vas sin facturar.',
+    body: 'Recién ahí pagás el setup de USD 1.200 y USD 200/mes de mantenimiento. Si no te ahorró horas medibles, no facturamos.',
   },
 ];

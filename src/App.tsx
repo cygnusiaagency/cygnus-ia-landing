@@ -9,14 +9,13 @@ import FAQ from './components/FAQ';
 import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import StickyNav from './components/StickyNav';
-import CustomCursor from './components/CustomCursor';
 import Inmobiliarias from './pages/Inmobiliarias';
 import EscabiadosChat from './pages/EscabiadosChat';
+import Privacidad from './pages/Privacidad';
 
 function HomePage() {
   return (
     <>
-      <CustomCursor />
       <Hero />
       <StickyNav />
       <main className="relative z-[2]">
@@ -48,6 +47,7 @@ function App() {
 
   if (normalized === '/inmobiliarias') return <Inmobiliarias />;
   if (normalized === '/escabiados') return <EscabiadosChat />;
+  if (normalized === '/privacidad') return <Privacidad />;
   return <HomePage />;
 }
 
