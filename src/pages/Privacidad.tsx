@@ -1,3 +1,5 @@
+import ConstellationMark from '../components/ConstellationMark';
+
 const CONTACT_EMAIL = 'agency.cygnusai@gmail.com';
 const LAST_UPDATED = '25 de junio de 2026';
 
@@ -16,8 +18,11 @@ export default function Privacidad() {
       {/* Top bar */}
       <header className="border-b border-line">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-5">
-          <a href="/" className="text-base font-bold tracking-tightest text-ink">
-            Cygnus<span className="text-accent"> IA</span>
+          <a href="/" className="flex items-center gap-2.5 no-underline">
+            <ConstellationMark size={26} variant="ink" />
+            <span className="text-[19px] font-semibold tracking-[-0.02em] text-ink">
+              Cygnus IA
+            </span>
           </a>
           <a
             href="/"
